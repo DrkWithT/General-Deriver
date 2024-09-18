@@ -1,0 +1,8 @@
+.DS_Store
+.cache
+.git
+.vscode
+build
+
+CMakeUserPresets.json
+compile_commands.json
