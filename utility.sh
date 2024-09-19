@@ -1,5 +1,5 @@
-# utility.sh
-# wraps CMake invocations
+# File: utility.sh
+# Brief: wraps CMake invocations
 
 if [[ $# -ne 1 ]]; then
     echo "Usage: ./utility.sh [info | debug | release]"

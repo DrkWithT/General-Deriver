@@ -9,16 +9,10 @@
  * 
  */
 
-#include <format>
+// #include <format>
 #include <iostream>
-#include <vector>
-
-#include "Foo/Foo.hpp"
+// #include <vector>
 
 int main() {
-    using FooLib::sumAll;
-
-    std::vector<int> test_nums = {1, 2, 3, 4};
-
-    std::cout << std::format("sum is {}\n", sumAll(test_nums));
+    std::cout << "Hello World!\n";
 }
