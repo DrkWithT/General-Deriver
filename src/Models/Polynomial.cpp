@@ -61,4 +61,18 @@ namespace GeneralDeriver::Models {
 
         return {Polynomial {new_terms}};
     }
+
+    std::string Polynomial::toText() const {
+        std::ostringstream sout;
+
+        for (auto [coeff, power] : terms) {
+            if (coeff < zero_coefficient) {
+                sout << '+' << coeff << "x^" << power;
+            } else {
+                sout << '-' << -coeff << "x^" << power;
+            }
+        }
+
+        return sout.str();
+    }
 }

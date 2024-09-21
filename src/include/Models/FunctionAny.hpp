@@ -14,9 +14,7 @@ namespace GeneralDeriver::Models {
      * @tparam Tp 
      */
     template <typename Tp>
-    struct NakedType {
-        using type = std::remove_reference_t<std::remove_cv_t<Tp>>;
-    };
+    using naked_t = std::remove_reference_t<std::remove_cv_t<Tp>>;
 
     /**
      * @brief Homemade, type-erasure based container for any algebraic function instance.
@@ -28,32 +26,28 @@ namespace GeneralDeriver::Models {
             virtual ~IStorage() = default;
             virtual IFunction* getIPointer() = 0;
             virtual bool isEmpty() const = 0;
-            virtual const std::type_info& getTypeInfo() const;
+            virtual const std::type_info& getTypeInfo() const = 0;
         };
 
         template <typename Tp> requires (std::is_base_of_v<IFunction, Tp>)
         struct Storage : public IStorage {
+            using plain_func_t = naked_t<Tp>;
             std::unique_ptr<IFunction> ptr;
-            std::type_info tpinfo;
 
-            Storage(Tp& func) : ptr(std::make_unique<Tp>(func)) {
-                tpinfo = typeid(NakedType<Tp>::type);
-            }
+            Storage(Tp& func) : ptr(std::make_unique<Tp>(func)) {}
 
-            Storage(Tp&& x_func) : ptr(std::make_unique<Tp>(x_func)) {
-                tpinfo = typeid(NakedType<Tp>::type);
-            }
+            Storage(Tp&& x_func) : ptr(std::make_unique<Tp>(x_func)) {}
 
             IFunction* getIPointer() override {
                 return ptr.get();
             }
 
-            [[nodiscard]] bool isEmpty() const {
+            [[nodiscard]] bool isEmpty() const override {
                 return ptr == nullptr;
             }
 
             const std::type_info& getTypeInfo() const override {
-                return typeid(NakedType<Tp>::type);
+                return typeid(plain_func_t);
             }
         };
 
@@ -69,7 +63,7 @@ namespace GeneralDeriver::Models {
                 return false;
             }
 
-            return typeid(NakedType<Tp>::type) == storage_ptr->getTypeInfo();
+            return typeid(naked_t<Tp>) == storage_ptr->getTypeInfo();
         }
 
         void swapWith(FunctionAny&& x_other) noexcept {
@@ -95,7 +89,7 @@ namespace GeneralDeriver::Models {
         }
 
         template <typename FuncTp>
-        auto unpackFunctionAny() -> NakedType<FuncTp>::type {
+        auto unpackFunctionAny() -> naked_t<FuncTp> {
             if (!hasItemOfType<FuncTp>()) {
                 throw std::runtime_error {"FunctionAny::AccessError: Invalid unpack type passed to unpackFunctionAny!"};
             }
