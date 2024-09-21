@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace GeneralDeriver::Models {
     enum class FuncType {
         polynomial,
@@ -18,10 +20,11 @@ namespace GeneralDeriver::Models {
      */
     class IFunction {
     public:
-        virtual ~IFunction() = delete;
+        virtual ~IFunction() = default;
 
         virtual FuncType getType() const = 0;
         virtual double evalAt(double x) const = 0;
         virtual FunctionAny makeDerivative() const = 0;
+        virtual std::string toText() const = 0;
     };
 }
