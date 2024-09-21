@@ -2,7 +2,7 @@
 # Brief: wraps CMake invocations
 
 if [[ $# -ne 1 ]]; then
-    echo "Usage: ./utility.sh [info | debug | release]"
+    echo "Usage: ./utility.sh [info | debug | release | test]"
     exit 1
 fi
 
@@ -13,7 +13,9 @@ if [[ "$option" = "debug" ]]; then
 elif [[ "$option" = "release" ]]; then
     cmake --fresh -S . -B build --preset vsc-gcc-release-config && cmake --build build && cp ./build/compile_commands.json .
 elif [[ "$option" = "info" ]]; then
-    echo "Usage: ./utility.sh [info | debug | release]"
+    echo "Usage: ./utility.sh [info | debug | release | test]"
+elif [[ "$option" = "test" ]]; then
+    ctest --test-dir build
 else
     echo "Invalid option!"
     exit 1
