@@ -6,10 +6,10 @@ project(CMakePresetDemo VERSION 0.0.1 LANGUAGES CXX)
 # (use preset)
 
 if (DO_DEBUG_BUILD)
-    add_compile_options(-Wall -Wextra -Wpedantic -g -Og)
+    add_compile_options(-Wall -Wextra -Wpedantic -Werror -g -Og)
 else()
     add_compile_options(-Wall -Wextra -Wpedantic -O2)
 endif()
 
-# add_testing()
+enable_testing()
 add_subdirectory(src)

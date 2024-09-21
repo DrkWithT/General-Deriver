@@ -1,9 +1,21 @@
 # CMake Preset Demo
 
 ### Brief:
-My first, personal template for C++ projects using CMake Presets. Requires VSCode, clangd with the dedicated extension, and CMake 3.28+.
+This repo contains a project in modern C++ meant for generating derivatives for any algebraic function. Work in progress.
+
+### Required Tools & Languages:
+ - Git & GitHub set up properly
+ - VSCode editor
+   - clangd extension
+   - CMake support extension
+ - CMake 3.28+
+   - Make, ninja, or some other native build system...
 
 ### Notes:
  - *nix or WSL setups with GCC installed will likely work.
- - For 1st build: `cmake -S . -B build --preset vsc-gcc-debug-config && cmake --build build && cp ./build/compile_commands.json .`
-    - Add the `--fresh` option to CMake on successive builds to reset variables.
+
+### To-Do's:
+ 1. Plan grammar. (**DONE**)
+ 2. Create parser & AST.
+ 3. Create equation models if needed.
+ 4. Create deriver based on visiting the AST.
