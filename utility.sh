@@ -15,7 +15,7 @@ elif [[ "$option" = "release" ]]; then
 elif [[ "$option" = "info" ]]; then
     echo "Usage: ./utility.sh [info | debug | release | test]"
 elif [[ "$option" = "test" ]]; then
-    ctest --test-dir build
+    ctest --test-dir build --timeout 3
 else
     echo "Invalid option!"
     exit 1
