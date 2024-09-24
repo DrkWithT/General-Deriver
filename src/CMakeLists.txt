@@ -2,7 +2,7 @@ set(SOURCE_HEADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_subdirectory(Models)
 add_subdirectory(Frontend)
-# add_subdirectory(Syntax)
+add_subdirectory(Syntax)
 # add_subdirectory(Backend)
 add_subdirectory(Tests)
 
