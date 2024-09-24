@@ -1,5 +1,6 @@
 # File: utility.sh
-# Brief: wraps CMake invocations
+# By: DrkWithT
+# Brief: wraps CMake & CTest invocations, even other useful cmds.
 
 if [[ $# -ne 1 ]]; then
     echo "Usage: ./utility.sh [info | debug | release | test | sloc]"
@@ -17,7 +18,7 @@ elif [[ "$option" = "info" ]]; then
 elif [[ "$option" = "test" ]]; then
     ctest --test-dir build --timeout 3
 elif [[ "$option" = "sloc" ]]; then
-    wc -l ./src/**/*.{hpp,cpp}
+    wc -l ./src/**/*.cpp ./src/include/**/*.hpp
 else
     echo "Invalid option!"
     exit 1
