@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LEXER_HPP
+#define LEXER_HPP
 
 #include "Frontend/Token.hpp"
 #include <string>
@@ -38,3 +39,5 @@ namespace GeneralDeriver::Frontend {
         [[nodiscard]] Token lexNext();
     };
 }
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TOKEN_HPP
+#define TOKEN_HPP
 
 #include <string_view>
 #include <string>
@@ -29,3 +30,5 @@ namespace GeneralDeriver::Frontend {
 
     std::string getLexeme(const Token& token, const std::string& source);
 }
+
+#endif

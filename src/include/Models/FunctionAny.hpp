@@ -1,4 +1,5 @@
-#pragma once
+#ifndef FUNCTION_ANY_HPP
+#define FUNCTION_ANY_HPP
 
 #include <stdexcept>
 #include <typeinfo>
@@ -100,3 +101,5 @@ namespace GeneralDeriver::Models {
         }
     };
 }
+
+#endif

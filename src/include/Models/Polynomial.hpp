@@ -1,4 +1,5 @@
-#pragma once
+#ifndef POLYNOMIAL_HPP
+#define POLYNOMIAL_HPP
 
 #include <vector>
 #include "Models/IFunction.hpp"
@@ -28,3 +29,5 @@ namespace GeneralDeriver::Models {
         std::string toText() const override;
     };
 }
+
+#endif
