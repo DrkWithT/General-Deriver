@@ -5,6 +5,7 @@
 #include <string>
 
 namespace GeneralDeriver::Frontend {
+    /// TODO: enable times and slash operator support later.
     enum class TokenType : uint8_t {
         eos,
         spacing,
@@ -13,8 +14,10 @@ namespace GeneralDeriver::Frontend {
         op_plus,
         op_minus,
         // op_times,
-        // op_divide,
+        // op_slash,
         op_power,
+        l_paren,
+        r_paren,
         unknown
     };
 

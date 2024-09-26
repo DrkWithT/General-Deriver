@@ -7,10 +7,12 @@
 namespace GeneralDeriver::Syntax {
     /// @note Represents only supported operations binding sub-expressions by x.
     enum class AstOpType : uint8_t {
+        neg,
         add,
         sub,
         mul,
         div,
+        power,
         none
     };
 
