@@ -112,4 +112,15 @@ namespace GeneralDeriver::Utils {
 
         return {};
     }
+
+    void AstPrinter::printAST(std::string_view title, const std::unique_ptr<Syntax::IAstNode>& root) {
+        std::cout << "Tree name: \"" << title << "\"\n";
+
+        if (!root) {
+            std::cout << "(null root, maybe bad!)\n";
+            return;
+        }
+
+        root->acceptVisitor(*this);
+    }
 }
