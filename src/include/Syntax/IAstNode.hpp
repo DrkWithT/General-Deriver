@@ -20,7 +20,8 @@ namespace GeneralDeriver::Syntax {
     enum class AstNodeType : uint8_t {
         literal,
         unary,
-        binary
+        binary,
+        unknown
     };
 
     /**
