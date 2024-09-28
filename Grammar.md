@@ -8,7 +8,9 @@ variable = "x"
 
 literal = number | variable | "(" expr ")"
 unary = "-"? literal
-factor = unary (("*" | "/") unary)*
-term = factor (("+" | "-") factor)*
+power = unary ("^" number)?
+<!-- factor = power (("*" | "/") power)* -->
+<!-- term = factor (("+" | "-") factor)* -->
+term = power (("+" | "-") power)*
 expr = term
 ```

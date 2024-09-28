@@ -10,6 +10,13 @@ target_include_directories(TestLexer PUBLIC "${SOURCE_HEADER_DIR}")
 target_sources(TestLexer PRIVATE TestLexer.cpp)
 target_link_libraries(TestLexer PRIVATE Frontend)
 
+# smoke test for Parser & AstPrinter (no crashing)
+add_executable(TestParser)
+target_include_directories(TestParser PUBLIC "${SOURCE_HEADER_DIR}")
+target_sources(TestParser PRIVATE TestParser.cpp)
+target_link_libraries(TestParser PRIVATE Frontend PRIVATE Syntax PRIVATE Utils)
+
 # setup unit test cmds
 add_test(NAME Poly COMMAND "$<TARGET_FILE:TestPolynomial>")
 add_test(NAME Lexer COMMAND "$<TARGET_FILE:TestLexer>")
+add_test(NAME Parser COMMAND "$<TARGET_FILE:TestParser>")

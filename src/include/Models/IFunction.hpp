@@ -1,4 +1,5 @@
-#pragma once
+#ifndef I_FUNCTION_HPP
+#define I_FUNCTION_HPP
 
 #include <string>
 
@@ -28,3 +29,5 @@ namespace GeneralDeriver::Models {
         virtual std::string toText() const = 0;
     };
 }
+
+#endif
