@@ -61,6 +61,8 @@ namespace GeneralDeriver::Frontend {
 
     void Parser::consumeToken(std::initializer_list<TokenType> expected) {
         if (expected.size() == 0) {
+            previous = current;
+            current = advanceToken();
             return;
         }
 
@@ -134,7 +136,7 @@ namespace GeneralDeriver::Frontend {
         auto lhs = parsePower();
 
         do {
-            auto current_tag = peekPrevious().tag;
+            auto current_tag = peekCurrent().tag;
 
             if (current_tag != TokenType::op_plus && current_tag != TokenType::op_minus) {
                 break;
