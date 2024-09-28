@@ -77,7 +77,6 @@ namespace GeneralDeriver::Utils {
         printIndent();
         std::cout << "op: " << static_cast<int>(node.getOp()) << '\n';
 
-        printIndent();
         if (node.getInnerPtr()) {
             node.getInnerPtr()->acceptVisitor(*this);
         }
@@ -97,8 +96,6 @@ namespace GeneralDeriver::Utils {
 
         printIndent();
         std::cout << "op: " << static_cast<int>(node.getOp()) << '\n';
-
-        printIndent();
 
         if (node.getLeft()) {
             node.getLeft()->acceptVisitor(*this);
