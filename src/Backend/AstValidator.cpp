@@ -117,6 +117,9 @@ namespace GeneralDeriver::Backend {
 
     /* AstValidator impl. */
 
+    AstValidator::AstValidator()
+    : values {}, ops {} {}
+
     AstValidator::OpStatus AstValidator::doStackOp() {
         if (ops.empty()) {
             return OpStatus::done;
@@ -161,11 +164,18 @@ namespace GeneralDeriver::Backend {
         return doStackOp();
     }
 
+    /// @note This visits operands in proper order given the power expression `base^power` must simplify power first & the stack is LIFO. Thus, visiting right then left will correctly give `(op_power, base, power)` in the later `doStackOp` call. However, commutative operations are ok to evaluate either way.
     std::any AstValidator::visitBinary(const Syntax::Binary& node) {
-        ops.push(node.getOp());
+        auto op = node.getOp();
+        ops.push(op);
 
-        node.getLeft()->acceptVisitor(*this);
-        node.getRight()->acceptVisitor(*this);
+        if (op == Syntax::AstOpType::power) {
+            node.getRight()->acceptVisitor(*this);
+            node.getLeft()->acceptVisitor(*this);
+        } else {
+            node.getLeft()->acceptVisitor(*this);
+            node.getRight()->acceptVisitor(*this);
+        }
 
         return doStackOp();
     }

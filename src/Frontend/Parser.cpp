@@ -101,6 +101,8 @@ namespace GeneralDeriver::Frontend {
             consumeToken({TokenType::r_paren});
 
             return temp;
+        } else if (peeked_tag == TokenType::op_minus) {
+            return parseUnary();
         }
 
         throw std::runtime_error {
