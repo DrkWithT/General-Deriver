@@ -15,7 +15,6 @@ This repo contains a project in modern C++ meant for generating derivatives for 
  - *nix or WSL setups with GCC installed will likely work.
 
 ### To-Do's:
- 1. Plan grammar. (**DONE**)
- 2. Create parser & AST.
- 3. Create equation models if needed.
- 4. Create deriver based on visiting the AST.
+ 1. Add GitHub Actions config to try building and then running component tests.
+ 2. Create emitter for AST to function model.
+ 3. Add REPL logic to prompt for equations to derive / evaluate derivative at some x.
