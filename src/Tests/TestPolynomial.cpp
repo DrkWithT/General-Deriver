@@ -37,7 +37,7 @@ int main() {
     double eval_output_2 = 0.0;
 
     try {
-        MyPoly derived_foo = wrapped_derived_foo.unpackFunctionAny<decltype(derived_foo)>();
+        MyPoly derived_foo = wrapped_derived_foo.unpackFunctionAny<MyPoly>();
 
         eval_output_2 = derived_foo.evalAt(eval_input_2);
     } catch (const std::runtime_error& access_err) {
