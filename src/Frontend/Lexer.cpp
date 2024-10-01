@@ -120,6 +120,10 @@ namespace GeneralDeriver::Frontend {
         char temp = source[pos];
 
         switch(temp) {
+            case '(':
+                return lexSingle(TokenType::l_paren);
+            case ')':
+                return lexSingle(TokenType::r_paren);
             case 'x':
                 return lexSingle(TokenType::variable);
             case '+':
