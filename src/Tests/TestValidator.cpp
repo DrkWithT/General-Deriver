@@ -21,6 +21,7 @@ using MyValidator = GeneralDeriver::Backend::AstValidator;
 static constexpr const char* test_source_1 = "x - 1";
 static constexpr const char* test_source_2 = "x + 0^-1";
 static constexpr const char* test_source_3 = "x + 0^0";
+static constexpr const char* test_source_4 = "x + 0^(2 - 2)";
 
 int main() {
     MyParser parser;
@@ -28,7 +29,7 @@ int main() {
 
     auto ast_1 = parser.parseAll(test_source_1);
 
-    if (!validator.validateAst(ast_1.root)) {
+    if (!ast_1.ok || !validator.validateAst(ast_1.root)) {
         std::cerr << "Unexpected validation failure for source 1.\n";
         return 1;
     }
@@ -36,7 +37,7 @@ int main() {
 
     auto ast_2 = parser.parseAll(test_source_2);
 
-    if (validator.validateAst(ast_2.root)) {
+    if (!ast_2.ok || validator.validateAst(ast_2.root)) {
         std::cerr << "Unexpected validation for source 2.\n";
         return 1;
     }
@@ -44,8 +45,16 @@ int main() {
 
     auto ast_3 = parser.parseAll(test_source_3);
 
-    if (validator.validateAst(ast_3.root)) {
+    if (!ast_3.ok || validator.validateAst(ast_3.root)) {
         std::cerr << "Unexpected validation for source 3.\n";
+        return 1;
+    }
+    validator.clearState();
+
+    auto ast_4 = parser.parseAll(test_source_4);
+
+    if (!ast_4.ok || validator.validateAst(ast_4.root)) {
+        std::cerr << "Unexpected validation for source 4.\n";
         return 1;
     }
 }

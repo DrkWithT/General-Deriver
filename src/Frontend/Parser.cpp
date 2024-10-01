@@ -123,7 +123,7 @@ namespace GeneralDeriver::Frontend {
 
     std::unique_ptr<Syntax::IAstNode> Parser::parsePower() {
         auto power_target = parseUnary();
-        
+
         if (peekCurrent().tag == TokenType::op_power) {
             consumeToken({});
             auto exponent = parseLiteral();
@@ -153,10 +153,6 @@ namespace GeneralDeriver::Frontend {
             auto rhs = parsePower();
 
             lhs = std::make_unique<Syntax::Binary>(op, std::move(lhs), std::move(rhs));
-
-            if (current_tag = peekCurrent().tag; current_tag == TokenType::eos) {
-                break;
-            }
         } while (true);
 
         return lhs;
@@ -175,7 +171,7 @@ namespace GeneralDeriver::Frontend {
         try {
             return {parseTerm(), true};
         } catch (const std::runtime_error& parse_err) {
-            std::cout << parse_err.what();
+            std::cerr << "\033[31;1m" << parse_err.what() << "\033[0m";
         }
 
         return {nullptr, false};
