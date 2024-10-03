@@ -7,13 +7,19 @@ on:
             - "main"
 
 jobs:
-    my-job:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - name: Enable Utility
-              run: chmod +x ./utility.sh
-            - name: Build Code
-              run: ./utility.sh debug
-            - name: Do Tests
-              run: ./utility.sh test
+  my-job:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        gcc-version: [13]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup
+        env:
+          CC: gcc-${{matrix.gcc-version}}
+          CXX: g++-${{matrix.gcc-version}}
+        run: chmod +x ./utility.sh
+      - name: Build Code
+        run: ./utility.sh debug
+      - name: Do Tests
+        run: ./utility.sh test
