@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup
-        run: update-alternatives --set gcc gcc-${{matrix.gcc-version}} && update-alternatives --set g++ g++-${{matrix.gcc-version}} && chmod +x ./utility.sh
+        run: update-alternatives --set gcc /usr/bin/gcc-${{matrix.gcc-version}} && update-alternatives --set g++ /usr/bin/g++-${{matrix.gcc-version}} && chmod +x ./utility.sh
       - name: Build Code
         run: ./utility.sh debug
       - name: Do Tests
