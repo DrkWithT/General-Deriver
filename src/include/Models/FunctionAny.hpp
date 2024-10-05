@@ -89,8 +89,16 @@ namespace GeneralDeriver::Models {
             return *this;
         }
 
+        const IFunction* getStoragePtr() const {
+            if (!hasItem()) {
+                return nullptr;
+            }
+
+            return storage_ptr.get()->getIPointer();
+        }
+
         template <typename FuncTp>
-        auto unpackFunctionAny() -> naked_t<FuncTp> {
+        auto unpackFunctionAny() const -> naked_t<FuncTp> {
             if (!hasItemOfType<FuncTp>()) {
                 throw std::runtime_error {"FunctionAny::AccessError: Invalid unpack type passed to unpackFunctionAny!"};
             }
