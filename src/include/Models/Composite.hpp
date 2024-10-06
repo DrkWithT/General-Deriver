@@ -23,7 +23,7 @@ namespace GeneralDeriver::Models {
         Syntax::AstOpType op; // top operation of composite
 
     public:
-        Composite() = delete;
+        Composite();
 
         /**
          * @brief Construct a new Composite object. All params are required!

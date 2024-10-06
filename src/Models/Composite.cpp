@@ -63,6 +63,9 @@ namespace GeneralDeriver::Models {
         return {};
     }
 
+    Composite::Composite()
+    : lhs_subject {}, rhs_subject {}, op {Syntax::AstOpType::none} {}
+
     Composite::Composite(Syntax::AstOpType op_, FunctionAny&& lhs, FunctionAny&& rhs)
     : lhs_subject(std::move(lhs)), rhs_subject(std::move(rhs)), op {op_} {}
 
