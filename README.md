@@ -16,7 +16,7 @@ This repo contains a project in modern C++ meant for generating derivatives for 
 
 ### To-Do's:
  1. ~~Add GitHub Actions config to try building and then running component tests.~~ (WON'T FIX)
- 2. Complete derivation logic.
- 3. Create emitter for AST to function model.
+ 2. Complete derivation logic. (WIP)
+ 3. Create emitter for AST to function model. (WIP)
     - NOTE: include pre-transformations e.g distribute negations or fold constants.
  3. Add REPL logic to prompt for equations to derive / evaluate derivative at some x.
