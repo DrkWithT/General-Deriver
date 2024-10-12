@@ -15,10 +15,10 @@ namespace GeneralDeriver::Utils {
     static constexpr int default_indent_spacing = 2;
 
     AstPrinter::AstPrinter()
-    : indent_size {default_indent_spacing} {}
+    : indent_size {default_indent_spacing}, depth {0} {}
 
     AstPrinter::AstPrinter(int indent_size_)
-    : indent_size {(indent_size_ > 0) ? indent_size_ : default_indent_spacing} {}
+    : indent_size {(indent_size_ > 0) ? indent_size_ : default_indent_spacing}, depth {0} {}
 
     void AstPrinter::printIndent() {
         const int spaces = indent_size * depth;
