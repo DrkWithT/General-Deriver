@@ -14,16 +14,10 @@ namespace GeneralDeriver::Backend {
 
     class FunctionEmitter : public Syntax::IAstVisitor<Models::Composite> {
     private:
-        enum class OpStatus : uint8_t {
-            good,
-            bad,
-            done
-        };
-
         std::stack<FoldResult> foldable_values;
         std::stack<Syntax::AstOpType> ops;
 
-        [[nodiscard]] OpStatus doStackOp();
+        void doStackOp();
 
     public:
         FunctionEmitter();
