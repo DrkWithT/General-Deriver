@@ -11,7 +11,6 @@
 #include <iostream>
 #include <format>
 #include "Frontend/Parser.hpp"
-#include "Syntax/AstNodes.hpp"
 #include "Utils/AstPrinter.hpp"
 
 using MyParser = GeneralDeriver::Frontend::Parser;

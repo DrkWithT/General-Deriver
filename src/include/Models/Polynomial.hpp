@@ -20,6 +20,8 @@ namespace GeneralDeriver::Models {
 
         Polynomial(std::vector<PolynomialTerm>& terms_);
 
+        Polynomial(std::vector<PolynomialTerm>&& x_terms_);
+
         FuncType getType() const override;
 
         [[nodiscard]] double evalAt(double x) const override;

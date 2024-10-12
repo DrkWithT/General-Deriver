@@ -33,11 +33,29 @@ namespace GeneralDeriver::Models {
         template <typename Tp> requires (std::is_base_of_v<IFunction, Tp>)
         struct Storage : public IStorage {
             using plain_func_t = naked_t<Tp>;
-            std::unique_ptr<IFunction> ptr;
+            std::shared_ptr<IFunction> ptr;
 
-            Storage(Tp& func) : ptr(std::make_unique<Tp>(func)) {}
+            Storage(Tp& func) : ptr(std::make_shared<Tp>(func)) {}
 
-            Storage(Tp&& x_func) : ptr(std::make_unique<Tp>(x_func)) {}
+            Storage(Tp&& x_func) : ptr(std::make_shared<Tp>(x_func)) {}
+
+            Storage(const Storage& other) {
+                if (&other == this) {
+                    return;
+                }
+
+                ptr = other.ptr;
+            }
+
+            Storage& operator=(const Storage& other) {
+                if (&other == this) {
+                    return *this;
+                }
+
+                ptr = other.ptr;
+
+                return *this;
+            }
 
             IFunction* getIPointer() override {
                 return ptr.get();
@@ -52,11 +70,11 @@ namespace GeneralDeriver::Models {
             }
         };
 
-        std::unique_ptr<IStorage> storage_ptr;
+        std::shared_ptr<IStorage> storage_ptr;
 
         /* private helper methods */
 
-        [[nodiscard]] bool hasItem() const { return storage_ptr != nullptr; }
+        [[nodiscard]] bool hasItem() const { return storage_ptr.get() != nullptr; }
 
         template <typename Tp>
         [[nodiscard]] bool hasItemOfType() const {
@@ -75,10 +93,25 @@ namespace GeneralDeriver::Models {
         constexpr FunctionAny() : storage_ptr {nullptr} {}
 
         template <typename Tp>
-        FunctionAny(Tp&& any_func) : storage_ptr(std::make_unique<Storage<Tp>>(any_func)) {}
+        FunctionAny(Tp&& any_func) : storage_ptr(std::make_shared<Storage<naked_t<Tp>>>(any_func)) {}
 
-        FunctionAny(const FunctionAny& other) = delete;
-        FunctionAny& operator=(const FunctionAny& other) = delete;
+        FunctionAny(const FunctionAny& other) {
+            if (&other == this) {
+                return;
+            }
+
+            storage_ptr = other.storage_ptr;
+        }
+
+        FunctionAny& operator=(const FunctionAny& other) {
+            if (&other == this) {
+                return *this;
+            }
+
+            storage_ptr = other.storage_ptr;
+
+            return *this;
+        }
 
         FunctionAny(FunctionAny&& x_other) noexcept {
             this->swapWith(std::move(x_other));
@@ -89,9 +122,17 @@ namespace GeneralDeriver::Models {
             return *this;
         }
 
+        const IFunction* getStoragePtr() const {
+            if (!hasItem()) {
+                return nullptr;
+            }
+
+            return storage_ptr.get()->getIPointer();
+        }
+
         template <typename FuncTp>
-        auto unpackFunctionAny() -> naked_t<FuncTp> {
-            if (!hasItemOfType<FuncTp>()) {
+        auto unpackFunctionAny() const -> naked_t<FuncTp> {
+            if (!hasItemOfType<naked_t<FuncTp>>()) {
                 throw std::runtime_error {"FunctionAny::AccessError: Invalid unpack type passed to unpackFunctionAny!"};
             }
 

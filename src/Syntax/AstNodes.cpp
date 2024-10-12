@@ -12,11 +12,11 @@
 #include "Syntax/AstNodes.hpp"
 #include "Syntax/IAstVisitor.hpp"
 #include "Syntax/IAstNode.hpp"
+#include "Models/Composite.hpp"
 
 namespace GeneralDeriver::Syntax {
     static constexpr double placeholder_z = 0.0;
 
-    /* Constant impl. */
 
     Constant::Constant()
     : value {placeholder_z} {}
@@ -32,7 +32,8 @@ namespace GeneralDeriver::Syntax {
 
     std::any Constant::acceptVisitor(IAstVisitor<std::any>& visitor) const { return visitor.visitConstant(*this); }
 
-    /* VarStub impl. */
+    Models::Composite Constant::acceptVisitor(IAstVisitor<Models::Composite>& visitor) const { return visitor.visitConstant(*this); }
+
 
     AstNodeType VarStub::getType() const { return AstNodeType::literal; }
 
@@ -40,7 +41,8 @@ namespace GeneralDeriver::Syntax {
 
     std::any VarStub::acceptVisitor(IAstVisitor<std::any>& visitor) const { return visitor.visitVarStub(*this); }
 
-    /* Unary impl. */
+    Models::Composite VarStub::acceptVisitor(IAstVisitor<Models::Composite>& visitor) const { return visitor.visitVarStub(*this); }
+
 
     Unary::Unary(AstOpType op_, std::unique_ptr<IAstNode>&& x_inner)
     : inner (std::move(x_inner)), op {op_} {}
@@ -51,11 +53,10 @@ namespace GeneralDeriver::Syntax {
 
     AstOpType Unary::getOp() const { return op; }
 
-    std::any Unary::acceptVisitor(IAstVisitor<std::any>& visitor) const {
-        return visitor.visitUnary(*this);
-    }
+    std::any Unary::acceptVisitor(IAstVisitor<std::any>& visitor) const { return visitor.visitUnary(*this); }
 
-    /* Binary impl. */
+    Models::Composite Unary::acceptVisitor(IAstVisitor<Models::Composite>& visitor) const { return visitor.visitUnary(*this); }
+
 
     Binary::Binary(AstOpType op_, std::unique_ptr<IAstNode>&& x_lhs, std::unique_ptr<IAstNode>&& x_rhs)
     : lhs (std::move(x_lhs)), rhs (std::move(x_rhs)), op {op_} {}
@@ -69,4 +70,6 @@ namespace GeneralDeriver::Syntax {
     AstOpType Binary::getOp() const { return op; }
 
     std::any Binary::acceptVisitor(IAstVisitor<std::any>& visitor) const { return visitor.visitBinary(*this); }
+
+    Models::Composite Binary::acceptVisitor(IAstVisitor<Models::Composite>& visitor) const { return visitor.visitBinary(*this); }
 }

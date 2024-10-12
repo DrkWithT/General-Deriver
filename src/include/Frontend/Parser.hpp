@@ -5,7 +5,6 @@
 #include <string>
 #include <memory>
 #include "Frontend/Lexer.hpp"
-#include "Syntax/AstNodes.hpp"
 #include "Syntax/IAstNode.hpp"
 
 namespace GeneralDeriver::Frontend {

@@ -4,6 +4,10 @@
 #include <any>
 #include "Syntax/IAstVisitor.hpp"
 
+namespace GeneralDeriver::Models {
+    class Composite; // NOTE: This is hacky, but should work... forward declare for IAstNode::acceptVisitor(IAstVisitor<Models::Composite>& visitor);
+}
+
 namespace GeneralDeriver::Syntax {
     /// @note Represents only supported operations binding sub-expressions by x.
     enum class AstOpType : uint8_t {
@@ -35,6 +39,7 @@ namespace GeneralDeriver::Syntax {
         virtual AstNodeType getType() const = 0;
         virtual AstOpType getOp() const = 0;
         virtual std::any acceptVisitor(IAstVisitor<std::any>& visitor) const = 0;
+        virtual Models::Composite acceptVisitor(IAstVisitor<Models::Composite>& visitor) const = 0;
     };
 }
 

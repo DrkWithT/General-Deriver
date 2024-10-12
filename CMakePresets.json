@@ -27,6 +27,28 @@
                 "CMAKE_CXX_EXTENSIONS": "OFF",
                 "DO_DEBUG_BUILD": "OFF"
             }
+        },
+        {
+            "name": "vsc-clang-debug-config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_CXX_EXTENSIONS": "OFF",
+                "DO_DEBUG_BUILD": "ON"
+            }
+        },
+        {
+            "name": "vsc-clang-release-config",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_CXX_STANDARD_REQUIRED": "ON",
+                "CMAKE_CXX_EXTENSIONS": "OFF",
+                "DO_DEBUG_BUILD": "OFF"
+            }
         }
     ]
 }

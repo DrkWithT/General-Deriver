@@ -6,6 +6,7 @@
 namespace GeneralDeriver::Models {
     enum class FuncType {
         polynomial,
+        identity,
         summation,
         difference,
         product,

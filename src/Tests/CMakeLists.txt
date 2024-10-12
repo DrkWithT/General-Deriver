@@ -22,8 +22,15 @@ target_include_directories(TestValidator PUBLIC "${SOURCE_HEADER_DIR}")
 target_sources(TestValidator PRIVATE TestValidator.cpp)
 target_link_libraries(TestValidator PRIVATE Frontend PRIVATE Syntax PRIVATE Backend)
 
+# test for Function emitter
+add_executable(TestEmitter)
+target_include_directories(TestEmitter PUBLIC "${SOURCE_HEADER_DIR}")
+target_sources(TestEmitter PRIVATE TestEmitter.cpp)
+target_link_libraries(TestEmitter PRIVATE Models PRIVATE Frontend PRIVATE Syntax PRIVATE Backend)
+
 # setup test cmds
 add_test(NAME Poly COMMAND "$<TARGET_FILE:TestPolynomial>")
 add_test(NAME Lexer COMMAND "$<TARGET_FILE:TestLexer>")
 add_test(NAME Parser COMMAND "$<TARGET_FILE:TestParser>")
 add_test(NAME Validator COMMAND "$<TARGET_FILE:TestValidator>")
+add_test(NAME Emitter COMMAND "$<TARGET_FILE:TestEmitter>")

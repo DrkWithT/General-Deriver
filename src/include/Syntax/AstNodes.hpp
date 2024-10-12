@@ -19,6 +19,7 @@ namespace GeneralDeriver::Syntax {
         AstNodeType getType() const override;
         AstOpType getOp() const override;
         std::any acceptVisitor(IAstVisitor<std::any>& visitor) const override;
+        Models::Composite acceptVisitor(IAstVisitor<Models::Composite>& visitor) const override;
     };
 
     class VarStub : public IAstNode {
@@ -28,6 +29,7 @@ namespace GeneralDeriver::Syntax {
         AstNodeType getType() const override;
         AstOpType getOp() const override;
         std::any acceptVisitor(IAstVisitor<std::any>& visitor) const override;
+        Models::Composite acceptVisitor(IAstVisitor<Models::Composite>& visitor) const override;
     };
 
     class Unary : public IAstNode {
@@ -44,6 +46,7 @@ namespace GeneralDeriver::Syntax {
         AstNodeType getType() const override;
         AstOpType getOp() const override;
         std::any acceptVisitor(IAstVisitor<std::any>& visitor) const override;
+        Models::Composite acceptVisitor(IAstVisitor<Models::Composite>& visitor) const override;
     };
 
     class Binary : public IAstNode {
@@ -62,6 +65,7 @@ namespace GeneralDeriver::Syntax {
         AstNodeType getType() const override;
         AstOpType getOp() const override;
         std::any acceptVisitor(IAstVisitor<std::any>& visitor) const override;
+        Models::Composite acceptVisitor(IAstVisitor<Models::Composite>& visitor) const override;
     };
 }
 

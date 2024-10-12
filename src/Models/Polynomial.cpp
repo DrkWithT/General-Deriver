@@ -21,7 +21,10 @@ namespace GeneralDeriver::Models {
     : terms {0} {}
 
     Polynomial::Polynomial(std::vector<PolynomialTerm>& terms_)
-    : terms(std::move(terms_)) {}
+    : terms (terms_) {}
+
+    Polynomial::Polynomial(std::vector<PolynomialTerm>&& x_terms_)
+    : terms (x_terms_) {}
 
     FuncType Polynomial::getType() const { return FuncType::polynomial; }
 
