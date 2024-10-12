@@ -66,8 +66,8 @@ namespace GeneralDeriver::Models {
     Composite::Composite()
     : lhs_subject {}, rhs_subject {}, op {Syntax::AstOpType::none} {}
 
-    Composite::Composite(Syntax::AstOpType op_, FunctionAny&& lhs, FunctionAny&& rhs)
-    : lhs_subject(std::move(lhs)), rhs_subject(std::move(rhs)), op {op_} {}
+    Composite::Composite(Syntax::AstOpType op_, const FunctionAny& lhs, const FunctionAny& rhs)
+    : lhs_subject(lhs), rhs_subject(rhs), op {op_} {}
 
     Syntax::AstOpType Composite::getOp() const { return op; }
 
@@ -101,6 +101,10 @@ namespace GeneralDeriver::Models {
     }
 
     double Composite::evalAt(double x) const {
+        if (getArity() == CompositeArity::invalid) {
+            return 0.0;
+        }
+
         double lhs_val = lhs_subject.getStoragePtr()->evalAt(x);
         double rhs_val = rhs_subject.getStoragePtr()->evalAt(x);
 

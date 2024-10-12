@@ -33,7 +33,7 @@ namespace GeneralDeriver::Models {
          * @param lhs First child always present for either operation type
          * @param rhs Second child present for binary
          */
-        Composite(Syntax::AstOpType op_, FunctionAny&& lhs, FunctionAny&& rhs);
+        Composite(Syntax::AstOpType op_, const FunctionAny& lhs, const FunctionAny& rhs);
 
         Syntax::AstOpType getOp() const;
         [[nodiscard]] CompositeArity getArity() const;
