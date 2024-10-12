@@ -100,7 +100,7 @@ namespace GeneralDeriver::Backend {
 
             return {
                 Syntax::AstOpType::neg,
-                std::move(inside_fn),
+                inside_fn,
                 {}
             };
         }
@@ -129,8 +129,8 @@ namespace GeneralDeriver::Backend {
 
         return {
             parent_op,
-            std::move(lhs_fn),
-            std::move(rhs_fn)
+            lhs_fn,
+            rhs_fn
         };
     }
 
