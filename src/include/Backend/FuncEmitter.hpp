@@ -2,22 +2,15 @@
 #define FUNC_EMITTER_HPP
 
 #include <memory>
-#include <stack>
 #include "Backend/AnalysisTypes.hpp"
 #include "Syntax/IAstVisitor.hpp"
 #include "Syntax/IAstNode.hpp"
-#include "Models/Polynomial.hpp"
 #include "Models/Composite.hpp"
 
 namespace GeneralDeriver::Backend {
     [[nodiscard]] Models::Composite convertFoldResult(const FoldResult& folded_value);
 
     class FunctionEmitter : public Syntax::IAstVisitor<Models::Composite> {
-    private:
-        std::stack<FoldResult> foldable_values;
-        std::stack<Syntax::AstOpType> ops;
-
-        void doStackOp();
 
     public:
         FunctionEmitter();
@@ -28,7 +21,6 @@ namespace GeneralDeriver::Backend {
         Models::Composite visitBinary(const Syntax::Binary& node) override;
 
         [[nodiscard]] Models::Composite emitFunction(const std::unique_ptr<Syntax::IAstNode>& root);
-        void resetSelf();
     };
 }
 

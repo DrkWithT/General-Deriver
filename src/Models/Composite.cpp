@@ -9,10 +9,11 @@
  */
 
 #include <cmath>
-#include <utility>
 #include <string>
-// #include <sstream>
+#include <iostream>
 #include "Models/Composite.hpp"
+#include "Backend/FuncEmitter.hpp"
+#include "Models/IFunction.hpp"
 #include "Models/Polynomial.hpp"
 #include "Syntax/IAstNode.hpp"
 
@@ -24,9 +25,10 @@ namespace GeneralDeriver::Models {
         auto second_derived = second.makeDerivative();
 
         if (top_op == Syntax::AstOpType::power) {
+            std::cout << "Chain rule on power op...\n"; // debug
             Composite new_exp {Syntax::AstOpType::sub, second, Composite {Syntax::AstOpType::none, {Polynomial {std::vector<PolynomialTerm> {{1, 0}}}}, {}}};
 
-            /// @note composed (f(x))^n functions must follow chain rule: (first)^second becomes second * first ^ (second - 1) * dx(first)! I must std::move only when I'm sure that first or second are not used again, avoiding indeterminate values.
+            /// @note composed (f(x))^n functions must follow chain rule: (first)^second becomes second * first ^ (second - 1) * dx(first)!
             return Composite {
                 Syntax::AstOpType::mul,
                 Composite {
@@ -34,32 +36,48 @@ namespace GeneralDeriver::Models {
                     second,
                     Composite {
                         Syntax::AstOpType::power,
-                        std::move(first),
+                        first,
                         new_exp
                     }
                 },
-                std::move(first_derived)
+                first_derived
             };
-        } else if (top_op != Syntax::AstOpType::mul && top_op != Syntax::AstOpType::div) {
+        } else if (top_op == Syntax::AstOpType::add || top_op ==  Syntax::AstOpType::sub) {
+            std::cout << "Chain rule on term op...\n"; // debug
             return {
                 Composite {
                     top_op,
-                    std::move(first_derived),
-                    std::move(second_derived)
+                    first_derived,
+                    second_derived
                 }
             };
         }
 
+        std::cout << "Derivation bad!\n"; // debug
         return {};
     }
 
     FunctionAny deriveComposite(Syntax::AstOpType top_op, const FunctionAny& inner_child) {
+        auto inner_derived = (inner_child.getStoragePtr()->getType() == FuncType::polynomial)
+            ? inner_child.unpackFunctionAny<Polynomial>().makeDerivative()
+            : inner_child.unpackFunctionAny<Composite>().makeDerivative();
+
         /// @note A none Composite is practically just the inner function, so I just skip the wrapping and derive the inner item.
         if (top_op == Syntax::AstOpType::none) {
-            return inner_child.unpackFunctionAny<Composite>().makeDerivative();
+            std::cout << "Deriving identity op...\n"; // debug
+
+            return inner_derived;
+        } else if (top_op == Syntax::AstOpType::neg) {
+            std::cout << "Deriving negation op...\n"; // debug
+            return Composite {
+                Syntax::AstOpType::mul,
+                Backend::convertFoldResult({-1}),
+                inner_derived
+            };
         }
 
         /// @note Do not handle negation op. type since the function emitter will detect negations of an expr. and simplify that away.
+        std::cout << "Derivation bad!\n"; // debug
         return {};
     }
 
@@ -74,7 +92,7 @@ namespace GeneralDeriver::Models {
     CompositeArity Composite::getArity() const {
         if (lhs_subject.getStoragePtr() != nullptr && rhs_subject.getStoragePtr() != nullptr) {
             return CompositeArity::binary;
-        } else if (!rhs_subject.getStoragePtr()) {
+        } else if (lhs_subject.getStoragePtr() != nullptr) {
             return CompositeArity::unary;
         }
 
@@ -101,12 +119,19 @@ namespace GeneralDeriver::Models {
     }
 
     double Composite::evalAt(double x) const {
-        if (getArity() == CompositeArity::invalid) {
+        auto op_arity = getArity();
+        double lhs_val = 0.0;
+        double rhs_val = 0.0;
+
+        if (op_arity == CompositeArity::unary) {
+            lhs_val = lhs_subject.getStoragePtr()->evalAt(x);
+        } else if (op_arity == CompositeArity::binary) {
+            lhs_val = lhs_subject.getStoragePtr()->evalAt(x);
+            rhs_val = rhs_subject.getStoragePtr()->evalAt(x);
+        } else {
+            /// @todo Add exception throwing for invalid op arity, perhaps from some func. emission failure.
             return 0.0;
         }
-
-        double lhs_val = lhs_subject.getStoragePtr()->evalAt(x);
-        double rhs_val = rhs_subject.getStoragePtr()->evalAt(x);
 
         switch (op) {
         case Syntax::AstOpType::sub:
@@ -131,11 +156,6 @@ namespace GeneralDeriver::Models {
     /// @todo Implement derivative member function!
     FunctionAny Composite::makeDerivative() const {
         auto checked_arity = getArity();
-        
-        if (checked_arity == CompositeArity::invalid) {
-            return {Composite {Syntax::AstOpType::none, {}, {}}};
-        }
-
         auto self_op = op;
 
         /// @note I dispatch by arity and op to overloaded helper functions to avoid cramming ALL logic in this member function.

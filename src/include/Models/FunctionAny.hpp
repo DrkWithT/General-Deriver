@@ -39,6 +39,24 @@ namespace GeneralDeriver::Models {
 
             Storage(Tp&& x_func) : ptr(std::make_shared<Tp>(x_func)) {}
 
+            Storage(const Storage& other) {
+                if (&other == this) {
+                    return;
+                }
+
+                ptr = other.ptr;
+            }
+
+            Storage& operator=(const Storage& other) {
+                if (&other == this) {
+                    return *this;
+                }
+
+                ptr = other.ptr;
+
+                return *this;
+            }
+
             IFunction* getIPointer() override {
                 return ptr.get();
             }
@@ -56,7 +74,7 @@ namespace GeneralDeriver::Models {
 
         /* private helper methods */
 
-        [[nodiscard]] bool hasItem() const { return storage_ptr != nullptr; }
+        [[nodiscard]] bool hasItem() const { return storage_ptr.get() != nullptr; }
 
         template <typename Tp>
         [[nodiscard]] bool hasItemOfType() const {

@@ -13,6 +13,7 @@
 #include <vector>
 #include "Backend/AnalysisTypes.hpp"
 #include "Backend/FuncEmitter.hpp"
+#include "Models/Polynomial.hpp"
 #include "Syntax/IAstNode.hpp"
 #include "Syntax/AstNodes.hpp"
 
@@ -33,49 +34,20 @@ namespace GeneralDeriver::Backend {
         return {Syntax::AstOpType::none, {}, {}};
     }
 
-    void FunctionEmitter::doStackOp() {
-        if (ops.empty()) {
-            return;
-        }
-
-        Syntax::AstOpType op = ops.top();
-        ops.pop();
-
-        if (op == Syntax::AstOpType::none) {
-            return;
-        }
-
-        FoldResult operand_1 = foldable_values.top();
-        foldable_values.pop();
-
-        if (op == Syntax::AstOpType::neg) {
-            foldable_values.push(computeOp(op, operand_1));
-            return;
-        }
-
-        FoldResult operand_2 = foldable_values.top();
-        foldable_values.pop();
-
-        foldable_values.push(computeOp(op, operand_1, operand_2));
-    }
-
-    FunctionEmitter::FunctionEmitter()
-    : foldable_values {}, ops {} {}
+    FunctionEmitter::FunctionEmitter() {}
 
     Models::Composite FunctionEmitter::visitConstant(const Syntax::Constant& node) {
-        foldable_values.push(FoldResult {node.getValue()});
-        ops.push(Syntax::AstOpType::none);
-        doStackOp();
-
-        return {};
+        return {Syntax::AstOpType::none, convertFoldResult(node.getValue()), {}};
     }
 
-    Models::Composite FunctionEmitter::visitVarStub(const Syntax::VarStub& node) {
-        foldable_values.push(FoldResult {SymbolicOpt {}});
-        ops.push(node.getOp());
-        doStackOp();
-
-        return {};
+    Models::Composite FunctionEmitter::visitVarStub([[maybe_unused]] const Syntax::VarStub& node) {
+        return {
+            Syntax::AstOpType::none,
+            Models::Polynomial {
+        {Models::PolynomialTerm {1, 1}}
+            },
+            {}
+        };
     }
 
     Models::Composite FunctionEmitter::visitUnary(const Syntax::Unary& node) {
@@ -85,47 +57,25 @@ namespace GeneralDeriver::Backend {
         if (root_op == Syntax::AstOpType::none) {
             return inside_fn;
         } else if (root_op == Syntax::AstOpType::neg) {
-            FoldResult inner_fold = foldable_values.top();
-            foldable_values.pop();
-
-            if (inner_fold.getFoldType() == FoldType::number) {
-                FoldResult negated_fold {-1.0 * inner_fold.getScalarOptional().value()};
-
-                return {
-                    Syntax::AstOpType::none,
-                    convertFoldResult(negated_fold),
-                    {}
-                };
-            }
-
             return {
-                Syntax::AstOpType::neg,
-                inside_fn,
-                {}
+                Syntax::AstOpType::mul,
+                convertFoldResult({-1}),
+                inside_fn
             };
         }
 
-        return {};
+        /// @note Hacky fix: treat unexpected binary exprs. here as 0
+        return {
+            Syntax::AstOpType::none,
+            convertFoldResult({0}),
+            {}
+        };
     }
 
     Models::Composite FunctionEmitter::visitBinary(const Syntax::Binary& node) {
         auto parent_op = node.getOp();
         Models::Composite lhs_fn = node.getLeft()->acceptVisitor(*this);
         Models::Composite rhs_fn = node.getRight()->acceptVisitor(*this);
-        FoldResult folded_pow;
-
-        if (parent_op == Syntax::AstOpType::power) {
-            folded_pow = foldable_values.top();
-            foldable_values.pop();
-        }
-
-        if (folded_pow.getFoldType() == FoldType::number) {
-            return {
-                parent_op,
-                convertFoldResult(folded_pow),
-                {}
-            };
-        }
 
         return {
             parent_op,
@@ -140,12 +90,5 @@ namespace GeneralDeriver::Backend {
         }
 
         return root->acceptVisitor(*this);
-    }
-
-    void FunctionEmitter::resetSelf() {
-        std::stack<FoldResult> temp_values;
-        std::stack<Syntax::AstOpType> temp_ops;
-        ops.swap(temp_ops);
-        foldable_values.swap(temp_values);
     }
 }
